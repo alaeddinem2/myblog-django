@@ -1,0 +1,46 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="bg-secondary mb-5">
+        <div class="hero-body">
+            <div class="clor color-primary  text-center">
+                <h1 class="text-light title">
+                    حالة الطقس لنهار اليوم
+                </h1>
+            </div>
+        </div>
+    </section>
+{% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-warning ">
+{{message}}
+    </div>
+{% endfor %}
+{% endif %}
+  <section>
+                         <form method="GET">
+        <div>
+            <label for="city"></label>
+            <input type="text" id="city" value="{{ request.GET.city }}" placeholder="ادحل اسم المدينة" name="city"/>
+        </div>
+                             <small>أدخل اسم المدينة بالحروف الانجليزية، مثال: ورقلة تكتب Ouargla</small>
+                             <br>
+        <input class="btn btn-secondary" type="submit" value="بحث"/>
+    </form>
+
+
+</section>
+
+
+
+
+  <img class="card-img-top" src="http://openweathermap.org/img/w/{{data_weather.icon}}.png" alt="Card image cap" width="50px" height="100 px">
+  <div class="card-body ">
+    <h5 class="card-title text-left">{{data_weather.city}} {{data_weather.temperateur}} C</h5>
+    <p class="card-text text-left ">{{data_weather.description}}</p>
+  </div>
+
+
+
+{% endblock content %}

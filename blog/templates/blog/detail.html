@@ -1,0 +1,89 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+{% load social_share %}
+
+<div class="border p-3 mb-3">
+    <img class="img-fluid rounded-circle border m-2"  src="{{post.author.profile.image.url}}" style="width:120px; height:120px;" alt="صورة الناشر ">
+    <span class="text-secondary"> نشر في {{   post.post_date |date:'d-m-Y'   }}  </span>
+   <!-- button of editing post -->
+    {% if post.author == user %}
+    <div class="form-group btn-editing">
+        <a class="btn btn-secondary" href="{% url 'post_update' post.id %}"> تحرير </a>
+        <a class="btn btn-danger" href="{% url 'post_delete' post.id %}"> حذف </a>
+
+    </div>
+     {% endif %}
+    <!-- end of edit -->
+    <h3>{{post.title}}</h3>
+    <div> <a class="text-dark" href="{% url 'detail' post.id %}"><img  class="img-fluid  border"
+          src="{{ post.image.url}}" alt=" {{post.title}} " style="width:780px; height:300px;"> </a>
+       </div>
+
+
+    <form action="{% url 'like_post' post.pk %}" method="POST" >
+     {% csrf_token %}
+        {% if user.is_authenticated %}
+        <div class="m-2">  <button type="submit" name="post_id" value="{{ post.id}}" class="btn btn-primary btn-sm " >
+         <i class="fa fa-heart"></i>
+     </button> -   {{ post.likes.count}} إعجاب</div>
+        {% else %}
+
+         <i class="fa fa-heart"></i>
+      -   {{ post.likes.count}} إعجاب
+      {% endif %}
+
+    </form>
+    <div class="post1"><p >{{post.content|safe}}</p></div>
+
+    <span>*المقالة تعبر عن رأي صاحبها *</span>
+    <div>
+        <ul>
+            <li><h5>شارك التدوينة على :</h5>  </li>
+            <li> {% post_to_facebook object_or_url "فيسبووك" %} </li>
+            <li> {% post_to_twitter "New Song: {{object.title}}. Check it out!" object_or_url "تويتر" %} </li>
+            <li> {% post_to_gplus object_or_url "غوغل+" %} </li>
+            <li> {% post_to_linkedin object.title object_or_url "لينكد اين" %} </li>
+
+        </ul>
+
+    </div>
+    </div>
+
+
+
+
+     <h2 class="border-bottom mt-5 mb-3"> التعليقات ({{comments.count}}) </h2>
+
+            {% for comment in comments %}
+
+      <ul class="p-2 comment ">
+          {% if post.author == user %}
+          <div class="form-group btn-editing ">
+        <a class="btn btn-danger btn-sm"  href="{% url 'delete_comment' comment.pk %}"> حذف </a>
+    </div>
+          {% endif %}
+    <h6 class="border-bottom p-2">({{ comment.name}}) <span class="text-secondary"> {{ comment.comment_date |date:'d-m-Y' }} </span></h6>
+   <p>{{comment.body|safe}}</p>
+    </ul>
+{% empty %}
+<h6 class="text-center p-4 comment">لا توجد تعليقات لعرضها </h6>
+    {% endfor %}
+
+<h3 class="border-bottom pb-3 mb-3 mt-5">إضافة تعليق جديد</h3>
+<div class="border p-4 mb-5 mt-4">
+ <form method="POST">
+    {% csrf_token %}
+     {{ comment_form.media}}
+    {{ comment_form |crispy }}
+
+    <input class="btn btn-secondary" type="submit" value="نشر التعليق ">
+
+</form>
+</div>
+
+
+
+
+{% endblock content %}

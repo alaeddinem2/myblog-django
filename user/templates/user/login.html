@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+{% load socialaccount %}
+{% block content %}
+{% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-warning ">
+{{message}}
+    </div>
+{% endfor %}
+{% endif %}
+
+
+{% load crispy_forms_tags %}
+
+
+
+<div class="border p-4 mb-5 ">
+    <legend class="border-bottom pb-1 mb-3 ">تسجيل دخول  </legend>
+ <form method="POST">
+    {% csrf_token %}
+    {{form|crispy }}
+
+    <input class="btn btn-secondary mt-4" type="submit" value="تسجيل دخول  ">
+
+</form>
+
+    <div class="border-top mt-4 pt-2">
+        <small > إذا لم يكن لديك حساب من قبل فيمكنك  <a href="{% url 'register' %}"> التسجيل ا </a> </small>
+    </div>
+    <div class="border-top mt-4 pt-2">
+        <h5>  أو التسجيل عن طريق <a class="text-primary"  href="{% provider_login_url "google" %}"> <i class="fab fa-google"></i>  </a> </h5>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock content %}
